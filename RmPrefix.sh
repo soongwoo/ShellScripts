@@ -31,4 +31,3 @@ while (( "$#" )); do
   shift
 
 done
-
