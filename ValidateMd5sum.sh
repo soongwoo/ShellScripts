@@ -20,8 +20,8 @@ cat $MD5 | while read line; do
   [ ! -e "$fname" ] && continue
 
   # calculate md5sum and show the result after comparing the md5sum values
-  val1=${line/\**/};
-  val2=$(CHECKSUM "$fname" | grep --only-matching -m 1 '^[0-9a-z]*')
+  val1=${line/\ \**/};
+  val2=$($CHECKSUM "$fname" | grep --only-matching -m 1 '^[0-9a-z]*')
 
   # show the result
   if [ "$val1" = "$val2" ]; then
