@@ -9,11 +9,13 @@ USAGE="Usage: $0 md5sum-file"
 [ $# -ne 1 ] && echo "$USAGE" && exit 1
 
 # initialize variables
-MD5=$1
+MD5FILE=$1
 CHECKSUM=md5sum
+OUTPUT="./output.md5"
+touch "$OUTPUT"
 
 # main function
-cat $MD5 | while read line; do
+cat $MD5FILE | while read line; do
 
   # ignore if the file does not exist
   fname=${line:34};
@@ -26,6 +28,7 @@ cat $MD5 | while read line; do
   # show the result
   if [ "$val1" = "$val2" ]; then
     echo "'$fname': OK"
+    echo "$line" >> "$OUTPUT"
   else
     echo "'$fname': NO"
   fi
