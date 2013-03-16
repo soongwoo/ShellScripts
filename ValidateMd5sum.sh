@@ -12,7 +12,7 @@ USAGE="Usage: $0 md5sum-file"
 MD5FILE=$1
 CHECKSUM=md5sum
 OUTPUT="./output.md5"
-touch "$OUTPUT"
+[ ! -e "$OUTPUT" ] && touch "$OUTPUT"
 
 # main function
 cat $MD5FILE | while read line; do
