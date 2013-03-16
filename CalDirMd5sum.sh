@@ -28,8 +28,8 @@ while (( "$#" )); do
   # process arguments
   else
     [ ! -e "$md5" ] && touch "$md5"
-    echo "Calculate '$1' ..."
     find "$1" -type f | while read fname; do
+      echo "Calculate '$fname' ..."
       md5sum "$fname" >> "$md5"
     done
   fi
