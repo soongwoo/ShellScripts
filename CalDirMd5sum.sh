@@ -29,8 +29,9 @@ while (( "$#" )); do
   else
     [ ! -e "$md5" ] && touch "$md5"
     echo "Calculate '$1' ..."
-    dirmd5=$(tar c "$1" | md5sum | grep --only-matching -m 1 '^[0-9a-z]*')
-    echo "$dirmd5 *$1" >> "$md5"
+    find "$1" -type f | while read fname; do
+      md5sum "$fname" >> "$md5"
+    done
   fi
 
   shift
