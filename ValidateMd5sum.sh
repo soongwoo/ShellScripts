@@ -31,6 +31,7 @@ cat $MD5FILE | while read line; do
     echo "$line" >> "$OUTPUT"
   else
     echo "'$fname': NO"
+    break;
   fi
 
 done
