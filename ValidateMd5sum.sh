@@ -9,13 +9,13 @@ USAGE="Usage: $0 md5sum-file"
 [ $# -ne 1 ] && echo "$USAGE" && exit 1
 
 # initialize variables
-MD5FILE=$1
+MD5FILE="$1"
 CHECKSUM=md5sum
 OUTPUT="./output.md5"
 [ ! -e "$OUTPUT" ] && touch "$OUTPUT"   # create it if it does not exist
 
 # main function
-cat $MD5FILE | while read line; do
+cat "$MD5FILE" | while read line; do
 
   # ignore if the file does not exist
   fname=${line:34};
@@ -35,4 +35,3 @@ cat $MD5FILE | while read line; do
   fi
 
 done
-
