@@ -7,6 +7,7 @@
 #  - still need to specifiy audio/video codec in new mp4 file.
 #  - find preset option for iPhone4 or above.
 #
+#  N.B. Is it really working?
 
 OPTION="[-outdir=.]"
 USAGE="Usage: $0 $OPTION mediafile1 mediafile2 ... mediafileN"
