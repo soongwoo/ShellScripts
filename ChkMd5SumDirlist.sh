@@ -24,7 +24,7 @@ while (( "$#" )); do
     echo "$1: Check its integrity with md5sum ..."
 
     cd "$1"
-    md5sum -c *md5
+    md5sum -c *md5  # specify md5 filename
     cd "$curdir"
 
   # what is it?
