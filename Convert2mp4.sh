@@ -55,7 +55,11 @@ while (( "$#" )); do
   echo " output file: $outdir/$fname.mp4"
 
   # command: need preset for iPhone4
-  ffmpeg -i "$1" -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
+#  if [ -e "$fname".srt ]; then
+#    ffmpeg -i "$1" -vf subtitles="$fname".srt -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
+#  else
+    ffmpeg -i "$1" -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
+#  fi
 
   shift;
 
