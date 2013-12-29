@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# extract audio from the given video files.
+# extract audio from the given video files and convert it to mp3.
 #
 # Revisions:
 #  - if output directory is not specified,
@@ -8,13 +8,13 @@
 #  - still need to audio file format
 #
 
-OPTION="[-debug=0] [-outdir=.] [-audio=m4a]"
+OPTION="[-debug=0] [-outdir=.]"
 USAGE="Usage: $0 $OPTION mediafile1 mediafile2 ... mediafileN"
 
 # initialize variables with default value
 debug=0
 outdir=""
-audio="m4a"
+audio="mp3"
 
 # do main task
 [ $# -eq 0 ] && echo "$USAGE" && exit 1
@@ -58,7 +58,8 @@ while (( "$#" )); do
   [ "$debug" -ne 0 ] && echo " output file: $outdir/$fname.$audio"
 
   # command: need preset for iPhone4
-  ffmpeg -i "$1" -vn -c:a libfdk_aac -b:a 128k "$outdir"/"$fname"."$audio"
+  # ffmpeg -i "$1" -vn -c:a libfdk_aac -b:a 128k "$outdir"/"$fname"."$audio"
+  ffmpeg -i "$1" -vn -c:a mp3 -b:a 320k "$outdir"/"$fname"."$audio"
 
   shift;
 
