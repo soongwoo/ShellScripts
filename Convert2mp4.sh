@@ -58,7 +58,8 @@ while (( "$#" )); do
 #  if [ -e "$fname".srt ]; then
 #    ffmpeg -i "$1" -vf subtitles="$fname".srt -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
 #  else
-    ffmpeg -i "$1" -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
+    ffmpeg -i "$1" -acodec libfdk_aac -b:a 192k -vcodec libx264 -preset slower -crf 21 -threads 0 "$outdir"/"$fname".mp4
+    # ffmpeg -i "$1" -acodec libfdk_aac -aq 100 -vcodec libx264 -preset slow -crf 22 -threads 0 "$outdir"/"$fname".mp4
 #  fi
 
   shift;

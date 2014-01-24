@@ -59,7 +59,11 @@ while (( "$#" )); do
 
   # command: need preset for iPhone4
   # ffmpeg -i "$1" -vn -c:a libfdk_aac -b:a 128k "$outdir"/"$fname"."$audio"
-  ffmpeg -i "$1" -vn -c:a mp3 -b:a 320k "$outdir"/"$fname"."$audio"
+
+  # when its audio is mp3 format, then just copy its audio
+  ffmpeg -i "$i" -vn -acodec copy ${i%%HD*}mp3
+
+  # ffmpeg -i "$1" -vn -c:a mp3 -b:a 320k "$outdir"/"$fname"."$audio"
 
   shift;
 
