@@ -46,7 +46,8 @@ while (( "$#" )); do
 
       curdir=$(pwd)
       cd "$fullname"
-      for fname in *[tivs4f]; do
+      # for fname in *[tivs4f]; do
+      find * -type f | while read fname; do
         echo " $fname"
         md5sum "$fname" >> "$md5"
       done

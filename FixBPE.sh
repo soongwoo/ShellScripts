@@ -20,6 +20,7 @@ TRUNC=truncate
 # initialize variables
 echo "MAKE SURE ALL FILES ARE DECRIPTED BEFORE RUNNING THIS SCRIPT!"
 read -p "Press [Enter] to continue ..."
+echo
 
 # main function
 while (( "$#" )); do
@@ -39,9 +40,21 @@ while (( "$#" )); do
 
     # its file size is greater than LONGMAX
     if [ "$sz" -gt "$LONGMAX" ]; then
-      newsz=$[ $sz - $BPEMAGIC ]
-      echo "'$bpe': new filesize=$newsz ($sz)"
-      truncate -s $newsz "$bpe"
+
+      echo "MAKE SURE '$bpe' IS DECRIPTED BEFORE TRUNCATING IT!"
+      echo -n "Enter 'y' to continue: "
+
+      read -n 1 key  # -s: do not echo input character. -n 1: read only 1 character (separate with space)
+      echo
+
+      # double brackets to test, single equals sign, empty string for just 'enter' in this case...
+      # if [[ ... ]] is followed by semicolon and 'then' keyword
+      if [[ $key = "y" ]]; then 
+        newsz=$[ $sz - $BPEMAGIC ]
+        echo "'$bpe': new filesize=$newsz ($sz)"
+        truncate -s $newsz "$bpe"
+      fi
+
     fi
 
   fi
