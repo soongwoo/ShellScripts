@@ -31,19 +31,23 @@ while (( "$#" )); do
     md5="$dirname".md5
 
     echo ""
-    echo "$1: Check its integrity of '$1' ..."
+    echo "$1: checking the file existence in '$md5'"
 
     cd "$1"
-    find * -type f | while read fname; do
-      if [ "$md5" != "$fname" ]; then
-        result=$(grep "$fname" "$md5")
-        if [ "$?" -ne 0 ]; then
-          echo "'$fname': No"
-        else
-          echo "'$fname': Yes"
+    if [ -e "$md5" ]; then
+      find * -type f | while read fname; do
+        if [ "$md5" != "$fname" ]; then
+          result=$(grep "$fname" "$md5")
+          if [ "$?" -ne 0 ]; then
+            echo " '$fname': No"
+          else
+            echo " '$fname': Yes"
+          fi
         fi
-      fi
-    done
+      done
+    else
+      echo " No '$md5'"
+    fi
     cd "$curdir"
 
   # what is it?
