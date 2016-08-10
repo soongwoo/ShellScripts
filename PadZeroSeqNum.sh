@@ -5,7 +5,7 @@
 # - seq format='E'NNN where NNN is number with leading zeros
 # - seq position: 2nd 
 
-debug=1
+debug=0
 NNN="3"
 IDstr="E"
 IDlen=1
@@ -56,8 +56,31 @@ while (( "$#" )); do
       let i+=1
     done
 
-    seq="$IDstr""$zero""$num";
-    [ $debug -eq 1 ] && echo "$seq";
+    new_seq="$IDstr""$zero""$num";
+    [ $debug -eq 1 ] && echo "$new_seq";
+
+    # do only if new seq is not same as the old seq
+    if [ "$new_seq" != "$seq" ]; then
+
+      # make the new filename
+      headstr=${fname/$seq*/};
+      tailstr=${fname/*$seq/};
+      [ $debug -eq 2 ] && echo "headstr='$headstr' tailstr='$tailstr'"
+
+      new_fname="$headstr""$new_seq""$tailstr"
+      [ $debug -eq 2 ] && echo "new_fname='$new_fname'"
+
+      # rename it
+      if [ -e "$new_fname" ]; then
+        echo "'$new_fname' does exist!"
+      else
+        echo -e "Rename '$fname' as\n\t'$new_fname'"
+        mv "$fname" "$new_fname"
+      fi
+
+    else
+        echo "'$fname': skipped"
+    fi
 
   fi
 
