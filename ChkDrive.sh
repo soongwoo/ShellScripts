@@ -3,6 +3,12 @@
 # Compare files and directories in two drives.
 #
 
+USAGE="Usage: $0 targetDrive"
+
+[ $# -lt 1 ] && echo "$USAGE" && exit 1
+
+drv="$1";
+
 # compare files and directories
 for i in *; do
 
@@ -15,9 +21,9 @@ for i in *; do
   # compare files and directories
   echo "$i";
   if [ -d "$i" ]; then
-    diff -r "$i" /cygdrive/n/"$i";
+    diff -r "$i" /cygdrive/"$drv"/"$i";
   else
-    diff "$i" /cygdrive/n/"$i";
+    diff "$i" /cygdrive/"$drv"/"$i";
   fi
 
 done
