@@ -17,7 +17,8 @@ du -k | sort -nr | awk '
            $1 = $1 / 1024;
            u += 1
         }
-        $1 = sprintf("%.2f %s", $1, Units[u]);
+        $1 = sprintf("%.2f%s\t", $1, Units[u]);
         print $0;
      }
     ' > "$outfile"
+
