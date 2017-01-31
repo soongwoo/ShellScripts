@@ -4,11 +4,11 @@
 #
 
 OPTION="[-first=1] [-last=0]"
-USAGE="Usage: $0 $OPTION target-drive"
+USAGE="Usage: $0 $OPTION drive-letter"
 
 first=1
 last=0
-target="NONE"
+drv="NONE"
 
 # compare files and directories
 while (( "$#" )); do
@@ -20,10 +20,10 @@ while (( "$#" )); do
     value=${tmp##*=}        # extract value
     eval $parameter=$value
 
-  elif [ "$target" == "NONE" ]; then
-     target=$1
+  elif [ "$drv" == "NONE" ]; then
+     drv=$1
   else
-    echo "Too many target drive specified"
+    echo "Too many drv drive specified"
   fi
 
   shift
@@ -31,8 +31,8 @@ while (( "$#" )); do
 done
 
 # check variables
-[ "$target" == "NONE" ] && echo "No target drive specified" && exit 1
-
+[ "$drv" == "NONE" ] && echo "No drv drive specified" && exit 1
+# should add a statement which checks whether the given drive is valid.
 
 # main function
 counter=0
@@ -53,9 +53,9 @@ for i in *; do
     # compare files and directories
     echo "$i";
     if [ -d "$i" ]; then
-      diff -r "$i" /cygdrive/"$target"/"$i";
+      diff -r "$i" /cygdrive/"$drv"/"$i";
     else
-      diff "$i" /cygdrive/"$target"/"$i";
+      diff "$i" /cygdrive/"$drv"/"$i";
     fi
 
   fi
