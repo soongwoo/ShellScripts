@@ -7,8 +7,6 @@ USAGE="Usage: $0 dir1 dir2 ... dirN"
 
 [ $# -lt 1 ] && echo "$USAGE" && exit 1
 
-curdir=$(pwd)
-
 while (( "$#" )); do
 
   # option argument
@@ -25,8 +23,8 @@ while (( "$#" )); do
     echo "$1:"
 
     find "$1"/* -type d | while read subdir; do
-      dname=${subdir#$1}
-      echo "  ${dname:1}"
+      dname=${subdir#$1}	# remove the directory name
+      echo "  ${dname:1}"	# remove the first char, '/'
     done
 
   # what is it?
