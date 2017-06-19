@@ -4,7 +4,8 @@
 # - file extension is passed as a parameter
 # - files exist in current directory
 
-OPTION="[-ext=mkv]"
+#OPTION="[-ext=mkv]"
+OPTION=""
 USAGE="Usage: $0 $OPTION md5sum-file"
 
 # check the number of argument
@@ -12,7 +13,8 @@ USAGE="Usage: $0 $OPTION md5sum-file"
 
 # initialize variables
 MD5=""
-ext="mkv"
+#ext="mkv"
+ext=""
 CHECKSUM=md5sum
 
 # main function
@@ -41,9 +43,11 @@ while (( "$#" )); do
     fi
 
     # do the task
-    for f in *"$ext"; do
+    # for f in *"$ext"; do
+    find * -type f | while read f; do
+
       # grace exit when there is no file.
-      [ ! -e "$f" ] && break
+      # [ ! -e "$f" ] && break
 
       # same file?
       [ "$f" == "$MD5" ] && continue
