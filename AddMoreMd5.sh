@@ -38,8 +38,9 @@ while (( "$#" )); do
     # assign it as MD5
     MD5="$1"
     if [ ! -e "$MD5" ]; then
-      echo "$MD5: doe not exist"
-      break
+      touch "$MD5";
+      # echo "  $MD5: doe not exist"
+      # break
     fi
 
     # do the task
