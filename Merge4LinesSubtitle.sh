@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Check pre-calculated file's md5sum in the given file
+# This program's integrity is not verified, yet!
 
 OPTION="[-debug=off|on]"
 USAGE="Usage: $0 srtfile"
@@ -44,8 +44,8 @@ cat "$SRT" | while read line; do
     [ "$debug" == "on" -a ${#line} -ne 1 ] && echo "$line"	# print the line when it has any chars except white chars.
   elif [ $nth -eq 2  -a "$timestr" != "$line" ]; then
     (( seq++ ))
-    [ "$timestr" != "" ] && echo -e "\r\n"
-    echo -e "$seq\r\n"
+    [ "$timestr" != "" ] && echo ""
+    echo "$seq"
     echo "$line"
     timestr="$line"
   elif [ $nth -eq 3 ]; then
