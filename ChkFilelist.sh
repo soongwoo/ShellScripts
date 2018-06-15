@@ -40,8 +40,8 @@ while (( "$#" )); do
           result=$(grep "$fname" "$md5")
           if [ "$?" -ne 0 ]; then
             echo " '$fname': No"
-          else
-            echo " '$fname': Yes"
+          # else
+          #  echo " '$fname': Yes"
           fi
         fi
       done
