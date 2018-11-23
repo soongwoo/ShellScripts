@@ -59,7 +59,7 @@ done
 [ "$debug" -eq 1 ] && echo " seconds='$seconds'"
 
 # sleep with the given seconds
-[ "$seconds" -gt 0 ] && date && echo "  Sleep $seconds(secs) ..." && sleep "$seconds" && echo;
+[ "$seconds" -gt 0 ] && date && echo "  Compare '$class' after sleeping $seconds(secs) ..." && sleep "$seconds" && echo;
 
 # compare directories
 for fullsrc in "$SRC"/"$class".*; do

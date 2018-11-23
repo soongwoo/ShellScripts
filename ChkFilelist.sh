@@ -39,14 +39,14 @@ while (( "$#" )); do
         if [ "$md5" != "$fname" ]; then
           result=$(grep "$fname" "$md5")
           if [ "$?" -ne 0 ]; then
-            echo " '$fname': No"
-          # else
-          #  echo " '$fname': Yes"
+            echo " '$fname': NO"
+          else
+            echo " '$fname': YES"
           fi
         fi
       done
     else
-      echo " No '$md5'"
+      echo " NO '$md5'"
     fi
     cd "$curdir"
 
