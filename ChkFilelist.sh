@@ -37,7 +37,7 @@ while (( "$#" )); do
     if [ -e "$md5" ]; then
       find * -type f | while read fname; do
         if [ "$md5" != "$fname" ]; then
-          result=$(grep "$fname" "$md5")
+          result=$(fgrep "$fname" "$md5")
           if [ "$?" -ne 0 ]; then
             echo " '$fname': NO"
           else
