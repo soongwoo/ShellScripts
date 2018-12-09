@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Create md5 files for its subdirectories and files in root directory in the given CD directory.
+# Create md5 files for its subdirectories and files in root directory in the given CD directories.
 
 build="yes"
 OPTION="[-build=yes|no]"

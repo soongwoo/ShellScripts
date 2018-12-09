@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Run "md5sum -c *md5" command in the given directory.
+# Check md5 files for its subdirectories and files in root directory in the given CD directories.
 
 OPTION="[-mode=debug]"
 USAGE="Usage: $0 dir1 dir2 ... dirN"
