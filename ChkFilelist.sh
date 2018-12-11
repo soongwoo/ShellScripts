@@ -34,7 +34,11 @@ while (( "$#" )); do
     echo "$1: checking the file existence in '$md5'"
 
     cd "$1"
-    if [ -e "$md5" ]; then
+
+    # if no $md5, then create it
+    [ -e "$md5" ] && touch "$md5"
+
+    #if [ -e "$md5" ]; then
       find * -type f | while read fname; do
         if [ "$md5" != "$fname" ]; then
           result=$(fgrep "$fname" "$md5")
@@ -45,9 +49,10 @@ while (( "$#" )); do
           fi
         fi
       done
-    else
-      echo " NO '$md5'"
-    fi
+    #else
+    #  echo " NO '$md5'"
+    #fi
+
     cd "$curdir"
 
   # what is it?
