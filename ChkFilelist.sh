@@ -36,14 +36,15 @@ while (( "$#" )); do
     cd "$1"
 
     # if no $md5, then create it
-    [ -e "$md5" ] && touch "$md5"
+    [ ! -e "$md5" ] && touch "$md5"
 
     #if [ -e "$md5" ]; then
       find * -type f | while read fname; do
         if [ "$md5" != "$fname" ]; then
           result=$(fgrep "$fname" "$md5")
           if [ "$?" -ne 0 ]; then
-            echo " '$fname': NO"
+	    md5sum "$fname" >> "$md5"
+            echo " '$fname': Added"
           else
             echo " '$fname': YES"
           fi
