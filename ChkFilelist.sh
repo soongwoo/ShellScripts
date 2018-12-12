@@ -35,24 +35,24 @@ while (( "$#" )); do
 
     cd "$1"
 
+    # check txt file existence
+    [ ! -e "$dirname".txt ] && echo " '$dirname.txt': NO"
+
     # if no $md5, then create it
     [ ! -e "$md5" ] && touch "$md5"
 
-    #if [ -e "$md5" ]; then
-      find * -type f | while read fname; do
-        if [ "$md5" != "$fname" ]; then
-          result=$(fgrep "$fname" "$md5")
-          if [ "$?" -ne 0 ]; then
-	    md5sum "$fname" >> "$md5"
-            echo " '$fname': Added"
-          else
-            echo " '$fname': YES"
-          fi
+    # check all files in the directory
+    find * -type f | while read fname; do
+      if [ "$md5" != "$fname" ]; then
+        result=$(fgrep "$fname" "$md5")
+        if [ "$?" -ne 0 ]; then
+          echo " '$fname': Added"
+          md5sum "$fname" >> "$md5"
+        else
+          echo " '$fname': YES"
         fi
-      done
-    #else
-    #  echo " NO '$md5'"
-    #fi
+      fi
+    done
 
     cd "$curdir"
 
