@@ -23,43 +23,44 @@ while (( "$#" )); do
   elif [ -d "$1" ]; then
 
     # take off '/', if it is a last character.
-    fullname="$1"
-    lastch=$(echo -n "$fullname" | tail -c -1)
-    [ "$lastch" == "/" ] && fullname=${fullname/%\//}
+    # fullname="$1"
+    # lastch=$(echo -n "$fullname" | tail -c -1)
+    # [ "$lastch" == "/" ] && fullname=${fullname/%\//}
 
     # get directory name
-    dirname=${fullname##.*\/}
-    md5="$dirname".md5
+    # dirname=${fullname##.*\/}
+    dname=${1%/}
+    md5="$dname".md5
 
     # check md5sum file
     echo ""
     if [ "$build" == "no" ]; then
-      if [ ! -f "$fullname/$dirname.md5" ]; then
-        echo "$fullname: NO $md5"
+      if [ ! -f "$dname/$dname.md5" ]; then
+        echo "$dname: NO $md5"
       else
-        echo "$fullname: $md5 exists!"
+        echo "$dname: $md5 exists!"
       fi
-    elif [ -f "$fullname/$dirname.md5" ]; then
-      echo "$fullname: $md5 exists!"
-    else # if [ ! -f "$fullname/$dirname.md5" ]; then
-      echo "$fullname: Create $md5 ..."
+    elif [ -f "$dname/$dname.md5" ]; then
+      echo "$dname: $md5 exists!"
+    elif [ -z "$(ls -A $dname)" ]; then
+      echo "$1: empty directory!"
+    else
+      echo "$dname: Create $md5 ..."
 
       curdir=$(pwd)
-      cd "$fullname"
-      # for fname in *[tivs4f]; do
+      cd "$dname"
       find * -type f | while read fname; do
         echo " $fname"
         md5sum "$fname" >> "$md5"
       done
       cd "$curdir"
-    fi
 
-    [ ! -f "$fullname/$dirname.txt" ] && echo "Warning: No '$fullname/$dirname.txt'"
+      [ ! -f "$dname/$dname.txt" ] && echo "Warning: No '$dname/$dname.txt'"
+    fi
 
   # what is it?
   else
-    echo ""
-    echo "$1: not a directory!"
+    echo -e "\n$1: not a directory!"
   fi
 
   shift

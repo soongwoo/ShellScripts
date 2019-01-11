@@ -20,17 +20,21 @@ while (( "$#" )); do
 
   # directory name
   elif [ -d "$1" ]; then
-    echo ""
-    echo "$1: Check its integrity with md5sum ..."
+    if [ -z "$(ls -A $1)" ]; then
+      echo -e "\n$1: empty directory!"
+    elif [ -z "$(ls -A $1/*md5)" ]; then
+      echo -e "\n$1: no md5 file!"
+    else
+      echo -e "\n$1: Check its integrity with md5sum ..."
 
-    cd "$1"
-    md5sum -c *md5  # specify md5 filename
-    cd "$curdir"
+      cd "$1"
+      md5sum -c *md5  # specify md5 filename
+      cd "$curdir"
+    fi
 
   # what is it?
   else
-    echo ""
-    echo "$1: not a directory!"
+    echo -e "\n$1: not a directory!"
   fi
 
   shift

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Create md5 files for its subdirectories and files in the given directories.
+# Check md5 files for its subdirectories and files in the given directories.
 
 debug=0
 OPTION="[-debug=1]"
@@ -37,6 +37,8 @@ while (( "$#" )); do
 
       fi
     done
+
+    # [ ! -f "$fullname/$dirname.txt" ] && echo "Warning: No '$fullname/$dirname.txt'"
 
   # what is it?
   else

@@ -22,21 +22,22 @@ while (( "$#" )); do
   elif [ -d "$1" ]; then
 
     # take off '/', if it is a last character.
-    fullname="$1"
-    lastch=$(echo -n "$fullname" | tail -c -1)
-    [ "$lastch" == "/" ] && fullname=${fullname/%\//}
+    # fullname="$1"
+    # lastch=$(echo -n "$fullname" | tail -c -1)
+    # [ "$lastch" == "/" ] && fullname=${fullname/%\//}
 
     # get directory name
-    dirname=${fullname##.*\/}
-    md5="$dirname".md5
+    # dirname=${fullname##.*\/}
+    dname=${1%/}
+    md5="$dname".md5
 
     echo ""
-    echo "$1: checking the file existence in '$md5'"
+    echo "$dname: checking the file existence in '$md5'"
 
-    cd "$1"
+    cd "$dname"
 
     # check txt file existence
-    [ ! -e "$dirname".txt ] && echo " '$dirname.txt': NO"
+    [ ! -e "$dname".txt ] && echo " '$dname.txt': NO"
 
     # if no $md5, then create it
     [ ! -e "$md5" ] && touch "$md5"
