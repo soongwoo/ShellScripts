@@ -2,11 +2,12 @@
 
 # Create md5 files for its subdirectories and files in the given directories.
 
-debug=0
-OPTION="[-debug=1]"
+OPTION="[-mode=debug]"
 USAGE="Usage: $0 dir1 dir2 ... dirN"
 
 [ $# -lt 1 ] && echo "$USAGE" && exit 1
+
+curdir=$(pwd)
 
 while (( "$#" )); do
 
@@ -23,20 +24,36 @@ while (( "$#" )); do
     # get directory name
     dname=${1%/}	# strip off a trailing '/'
 
-    curdir=$(pwd)
-    find "$dname" | while read fname; do
-      if [ -f "$fname" ]; then
-        f=${fname##*/}	# filename
-        d=${fname%/*}	# full directory name
-        m=${d##*/}	# directory
-        [ "$debug" -ne 0 ] && echo " '$d' '$m' $f"
+    # check md5sum file
+    echo ""
+    if [ -z "$(ls -A $dname)" ]; then
+      echo "$1: empty directory!"
+    elif [ -f "$dname/$dname.md5" ]; then
+      echo "$dname: $md5 exists!"
+    else
+      echo "$dname: Create $md5 ..."
 
-	cd "$d"
-        md5sum "$f" >> "$m".md5
-	cd "$curdir"
+      find "$dname" | while read fname; do
+        if [ -f "$fname" ]; then
+          f=${fname##*/}	# filename
+          d=${fname%/*}	# full directory name
+          m=${d##*/}	# directory
+          [ "$mode" == "debug" ] && echo " '$d' '$m' $f"
+          dd="$d""/"	# full directory name with trailing slash
 
-      fi
-    done
+          md5="$(md5sum "$fname")"	# get md5sum of $fname
+          md5=${md5//$dd/}		# format the filename in md5sum string
+          [ "$mode" == "debug" ] && echo "$md5" 
+	  echo "$md5" >> "$d"/"$m".md5	# store the md5sum string in the right place
+
+          # cd "$d"
+          # md5sum "$f" >> "$m".md5
+          # cd "$curdir"
+
+        fi
+      done
+
+    fi
 
   # what is it?
   else
