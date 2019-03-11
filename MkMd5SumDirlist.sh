@@ -26,7 +26,8 @@ while (( "$#" )); do
 
     # check md5sum file
     echo ""
-    if [ -z "$(ls -A $dname)" ]; then
+    result=$(ls -A "$dname")
+    if [ -z "$result" ]; then
       echo "$1: empty directory!"
     elif [ -f "$dname/$dname.md5" ]; then
       echo "$dname: $md5 exists!"
