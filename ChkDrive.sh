@@ -20,9 +20,9 @@ for i in *; do
 
   # compare files and directories
   echo "$i";
-  if [ -d "$i" ]; then
+  if [ -d /cygdrive/"$drv"/"$i" ]; then
     diff -r "$i" /cygdrive/"$drv"/"$i";
-  else
+  elif [ -e /cygdrive/"$drv"/"$i" ]; then
     diff "$i" /cygdrive/"$drv"/"$i";
   fi
 

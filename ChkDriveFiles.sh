@@ -3,11 +3,12 @@
 # Compare files and directories in two drives.
 #
 
-OPTION="[-first=1] [-last=0]"
+#OPTION="[-first=1] [-last=0]"
+OPTION=""
 USAGE="Usage: $0 $OPTION drive-letter"
 
-first=1
-last=0
+#first=1
+#last=0
 drv="NONE"
 
 # compare files and directories
@@ -46,19 +47,19 @@ for i in *; do
 
   # check whether it is in the given range
   (( counter++ ))
-  if [ $counter -lt $first ]; then continue
-  elif [ $counter -gt $last ]; then break
-  else
+#  if [ $counter -lt $first ]; then continue
+#  elif [ $counter -gt $last ]; then break
+#  else
 
     # compare files and directories
     echo "$i";
-    if [ -d "$i" ]; then
+    if [ -d /cygdrive/"$drv"/"$i" ]; then
       diff -r "$i" /cygdrive/"$drv"/"$i";
-    else
+    elif [ -e /cygdrive/"$drv"/"$i" ]; then
       diff "$i" /cygdrive/"$drv"/"$i";
     fi
 
-  fi
+#  fi
 
 done
 
