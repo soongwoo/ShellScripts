@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Chech whether video file's description file exists in current drive,
+# Check whether video file's description file exists in current drive,
 #
 
 USAGE="Usage: $0"
