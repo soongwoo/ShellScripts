@@ -21,7 +21,7 @@ for i in *; do
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
   # check video file's descrition text
-  [ -d "$1"/"$i" ] && echo "$i" && mv "$i" A."$i";
+  [ -d /cygdrive/"$1"/"$i" ] && echo "$i" && mv "$i" A."$i";
 
 done
 
