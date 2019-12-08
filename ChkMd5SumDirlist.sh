@@ -2,7 +2,8 @@
 
 # Run "md5sum -c *md5" command in the given directory.
 
-OPTION="[-mode=debug]"
+OPTION="[-debug=0]"
+debug=0
 USAGE="Usage: $0 dir1 dir2 ... dirN"
 
 [ $# -lt 1 ] && echo "$USAGE" && exit 1
@@ -19,24 +20,21 @@ while (( "$#" )); do
     eval $parameter=$value
 
   # directory name
-#  elif [ -d "$1" ]; then
-  else
-    echo "$i"; continue;
-    if [ -z "$(ls -A $1)" ]; then
-      echo -e "\n$1: empty directory!"
-    elif [ -z "$(ls -A $1/*md5)" ]; then
+  elif [ -d "$1" ]; then
+
+    if [ -z "$(ls -A $1/*.md5)" ]; then
       echo -e "\n$1: no md5 file!"
     else
       echo -e "\n$1: Check its integrity with md5sum ..."
 
       cd "$1"
-      md5sum -c *md5  # specify md5 filename
+      md5sum -c *.md5  # specify md5 filename
       cd "$curdir"
     fi
 
   # what is it?
-#  else
-#    echo -e "\n$1: not a directory!"
+  else
+    echo -e "\n$1: not a directory!"
   fi
 
   shift
