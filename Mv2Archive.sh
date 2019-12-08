@@ -20,8 +20,17 @@ for i in *; do
   # skip 'System Volume Information'
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
-  # check video file's descrition text
-  [ -d "$1"/"$i" ] && echo "$i" && mv "$i" A."$i";
+  # check the directory integrity and append "A." in the directory name
+  if [ -d /cygdrive/"$1"/"$i" ]; then
+    echo -n "$i";
+    result=$(diff -r "$i" /cygdrive/"$1"/"$i");
+    if [ "$?" -eq 0 ]; then
+      mv "$i" A."$i";
+    else
+      echo -n ": NO"
+    fi
+    echo "";
+  fi
 
 done
 
