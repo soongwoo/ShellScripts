@@ -19,7 +19,9 @@ while (( "$#" )); do
     eval $parameter=$value
 
   # directory name
-  elif [ -d "$1" ]; then
+#  elif [ -d "$1" ]; then
+  else
+    echo "$i"; continue;
     if [ -z "$(ls -A $1)" ]; then
       echo -e "\n$1: empty directory!"
     elif [ -z "$(ls -A $1/*md5)" ]; then
@@ -33,8 +35,8 @@ while (( "$#" )); do
     fi
 
   # what is it?
-  else
-    echo -e "\n$1: not a directory!"
+#  else
+#    echo -e "\n$1: not a directory!"
   fi
 
   shift

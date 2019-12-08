@@ -1,9 +1,11 @@
 #!/bin/bash
 #
-# Check whether video file's description file exists in current drive,
+# Rename archived directories by padding "A." at the beginning.
 #
 
-USAGE="Usage: $0"
+USAGE="Usage: $0 target-drive-letter"
+
+[ $# -lt 1 ] && echo "$USAGE" && exit 1
 
 [ $# -gt 1 ] && echo "$USAGE" && exit 1
 
@@ -19,7 +21,7 @@ for i in *; do
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
   # check video file's descrition text
-  [ ! -e "$i"/"$i".txt ] && echo "$i";
+  [ -d /cygdrive/"$1"/"$i" ] && echo "$i" && mv "$i" A."$i";
 
 done
 
