@@ -3,13 +3,12 @@
 # Compare files and directories in two drives.
 #
 
-#OPTION="[-first=1] [-last=0]"
-OPTION=""
+OPTION="[-debug=0] [tag=A]"
 USAGE="Usage: $0 $OPTION drive-letter"
 
-#first=1
-#last=0
+tag=A
 drv="NONE"
+debug=0
 
 # compare files and directories
 while (( "$#" )); do
@@ -45,22 +44,24 @@ for i in *; do
   # skip 'System Volume Information'
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
-  # check whether it is in the given range
-  (( counter++ ))
-#  if [ $counter -lt $first ]; then continue
-#  elif [ $counter -gt $last ]; then break
-#  else
+  # compare files and directories
+  if [ -e /cygdrive/"$drv"/"$i" ]; then
 
-    # compare files and directories
     echo "$i";
-    if [ -d /cygdrive/"$drv"/"$i" ]; then
-      diff -r "$i" /cygdrive/"$drv"/"$i";
-    elif [ -e /cygdrive/"$drv"/"$i" ]; then
-      diff "$i" /cygdrive/"$drv"/"$i";
-    fi
 
-#  fi
+    if [ -d /cygdrive/"$drv"/"$i" ]; then arg="-r"; else arg=""; fi
+
+    result=$(diff "$arg"  "$i" /cygdrive/"$drv"/"$i");
+
+    # rename the source when the target is same as the source
+    if [ "$?" -eq 0 ]; then (( counter++ )); mv "$i" "$tag"."$i"; fi
+
+  fi
 
 done
+
+[ "$debug" -ne 0 ] && echo "";
+[ "$debug" -ne 0 ] && echo "$counter source(s) are same!"
+[ "$debug" -ne 0 ] && echo ""
 
 exit 0
