@@ -39,6 +39,8 @@ for i in *; do
   # skip 'System Volume Information'
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
+  echo "$i";	# show the progress
+
   chown "$owner":"$group" "$i";	# change directory attribute
   if [ -d "$i" ]; then
     (( ndir++ ));			# increment directory counter

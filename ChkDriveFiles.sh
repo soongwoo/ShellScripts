@@ -49,9 +49,10 @@ for i in *; do
 
     echo "$i";
 
-    if [ -d /cygdrive/"$drv"/"$i" ]; then arg="-r"; else arg=""; fi
+    # if [ -d /cygdrive/"$drv"/"$i" ]; then arg="-r"; else arg=""; fi
+    # result=$(diff "$arg"  "$i" /cygdrive/"$drv"/"$i");
 
-    result=$(diff "$arg"  "$i" /cygdrive/"$drv"/"$i");
+    result=$(diff -r "$i" /cygdrive/"$drv"/"$i");
 
     # rename the source when the target is same as the source
     if [ "$?" -eq 0 ]; then (( counter++ )); mv "$i" "$tag"."$i"; fi
