@@ -5,11 +5,11 @@
 # - file attrib as 644.
 #
 
-OPTION="[-dattr=755] [-fattr=644]"
+OPTION="[-dattr=770] [-fattr=700]"
 USAGE="Usage: $0 $OPTION"
 
 dattr=755
-fattr=644
+fattr=700
 
 # compare files and directories
 while (( "$#" )); do
