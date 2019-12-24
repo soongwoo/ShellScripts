@@ -8,7 +8,7 @@
 OPTION="[-dattr=770] [-fattr=700]"
 USAGE="Usage: $0 $OPTION"
 
-dattr=755
+dattr=770
 fattr=700
 
 # compare files and directories
