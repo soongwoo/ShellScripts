@@ -2,12 +2,14 @@
 #
 # Change the attribute of all directories and files in current drive.
 # - directory attrib as 0770
-# - file attrib as 644.
+# - file attrib as 700
+# NEED TO UNDERSTAND FILE ATTRIBUTE IN WINDOWS 10
 #
 
-OPTION="[-dattr=770] [-fattr=700]"
+OPTION="[-debug=0] [-dattr=770] [-fattr=700]"
 USAGE="Usage: $0 $OPTION"
 
+debug=0
 dattr=770
 fattr=700
 
@@ -40,7 +42,9 @@ for i in *; do
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
   if [ -d "$i" ]; then
-    (( ndir++ ));		# increment directory counter
+
+    [ "$debug" -ne 0 ] && (( ndir++ ));		# increment directory counter
+
     chmod "$dattr" "$i";	# change directory attribute
 
     # check whether it is one or more subdirectories
@@ -55,7 +59,8 @@ for i in *; do
     fi
 
   else 
-    (( nfile++ ));
+
+    [ "$debug" -ne 0 ] && (( nfile++ ));
 
     chmod "$fattr" "$i"
 
