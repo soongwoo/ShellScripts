@@ -57,7 +57,7 @@ for i in *; do
 
       lval=$(diff "$i"/"$f" /cygdrive/"$drv"/"$i"/"$f");
 
-      [ "$?" -ne 0 ] && result=1 && break;
+      [ "$?" -ne 0 ] && result=1 && echo "$f" && break;
 
     done
 
