@@ -46,31 +46,25 @@ for i in *; do
   # compare files and directories
   if [ -e /cygdrive/"$drv"/"$i" ]; then
 
-    echo -n "$i: ";
+    echo "$i:";
     result=0;
 
     # compare all files in the directory
     find "$i" -type f | while read fname; do
 
       f=${fname##$i*\/};
-      [ "$debug" -ne 0 ] && echo " $f";
 
+      echo -n " $f";
       lval=$(diff "$i"/"$f" /cygdrive/"$drv"/"$i"/"$f");
 
-      [ "$?" -ne 0 ] && result=1 && echo "$f" && break;
+      [ "$?" -ne 0 ] && result=1 && echo ": NOT COPIED" && break;
+
+      echo ""
 
     done
 
-
     # rename the source when the target is same as the source
-    if [ "$result" -eq 0 ]; then
-      echo "copied";
-      mv "$i" "$tag"."$i";
-    else
-      echo "NOT COPIED";
-    fi
-
-    echo ""
+    [ "$result" -eq 0 ] && mv "$i" "$tag"."$i";
 
   fi
 
