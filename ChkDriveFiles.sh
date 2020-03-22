@@ -57,11 +57,17 @@ for i in *; do
       echo -n " $f";
       lval=$(diff "$i"/"$f" /cygdrive/"$drv"/"$i"/"$f");
 
-      [ "$?" -ne 0 ] && result=1 && echo ": NOT COPIED" && break;
+      if [ "$?" -ne 0 ]; then
+	result=1;
+	echo ": NOT COPIED";
+       	break;
+      fi
 
-      echo ""
+      echo "";
 
     done
+
+    echo "";
 
     # rename the source when the target is same as the source
     [ "$result" -eq 0 ] && mv "$i" "$tag"."$i";
