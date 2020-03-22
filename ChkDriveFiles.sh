@@ -1,10 +1,10 @@
 #!/bin/bash
 #
-# Compare files and directories in two drives.
+# Check whether all files in the source drive directories in the target drive.
 #
 
 OPTION="[-debug=0] [tag=A]"
-USAGE="Usage: $0 $OPTION drive-letter"
+USAGE="Usage: $0 $OPTION target-drive-letter"
 
 tag=A
 drv="NONE"
@@ -35,7 +35,6 @@ done
 # should add a statement which checks whether the given drive is valid.
 
 # main function
-counter=0
 for i in *; do
 
   # skip $RECYCLE.BIN
@@ -47,22 +46,34 @@ for i in *; do
   # compare files and directories
   if [ -e /cygdrive/"$drv"/"$i" ]; then
 
-    echo "$i";
+    echo -n "$i: ";
+    result=0;
 
-    # if [ -d /cygdrive/"$drv"/"$i" ]; then arg="-r"; else arg=""; fi
-    # result=$(diff "$arg"  "$i" /cygdrive/"$drv"/"$i");
+    # compare all files in the directory
+    find "$i" -type f | while read fname; do
 
-    result=$(diff -r "$i" /cygdrive/"$drv"/"$i");
+      f=${fname##$i*\/};
+      [ "$debug" -ne 0 ] && echo " $f";
+
+      lval=$(diff "$i"/"$f" /cygdrive/"$drv"/"$i"/"$f");
+
+      [ "$?" -ne 0 ] && result=1 && break;
+
+    done
+
 
     # rename the source when the target is same as the source
-    if [ "$?" -eq 0 ]; then (( counter++ )); mv "$i" "$tag"."$i"; fi
+    if [ "$result" -eq 0 ]; then
+      echo "copied";
+      mv "$i" "$tag"."$i";
+    else
+      echo "NOT COPIED";
+    fi
+
+    echo ""
 
   fi
 
 done
-
-[ "$debug" -ne 0 ] && echo "";
-[ "$debug" -ne 0 ] && echo "$counter source(s) are same!"
-[ "$debug" -ne 0 ] && echo ""
 
 exit 0
