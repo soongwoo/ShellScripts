@@ -22,13 +22,15 @@ while (( "$#" )); do
     parameter=${tmp%%=*}    # extract name
     value=${tmp##*=}        # extract value
     eval $parameter=$value
+  else
+    echo "$USAGE" && exit 1
   fi
 
   shift
 
 done
 
-echo "dattr=$dattr fattr=$fattr"
+[ "$debug" -ne 0 ] && echo "dattr=$dattr fattr=$fattr"
 
 # main function
 ndir=0

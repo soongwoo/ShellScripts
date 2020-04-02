@@ -1,11 +1,15 @@
 #!/bin/sh
 
-# List the subdirectories of the given directories.
+# List the subdirectories of the given drive.
 
-OPTION="[-mode=debug]"
-USAGE="Usage: $0 dir1 dir2 ... dirN"
+OPTION="[-debug=0]"
+USAGE="Usage: $0 drive1 drive2 ... driveN"
 
 [ $# -lt 1 ] && echo "$USAGE" && exit 1
+
+#initialize variables
+debug=0
+curdir=$(pwd)
 
 while (( "$#" )); do
 
@@ -16,23 +20,41 @@ while (( "$#" )); do
     value=${tmp##*=}        # extract value
     eval $parameter=$value
 
-  # directory name
-  elif [ -d "$1" ]; then
+  else
 
-    echo ""
-    echo "$1:"
+    drv="$1";
+    [ "$debug" -ne 0 ] && echo "$drv";
 
-    find "$1"/* -type d | while read subdir; do
-      dname=${subdir#$1}	# remove the directory name
-      echo "  ${dname:1}"	# remove the first char, '/'
+    [ ! -f /cygdrive/"$drv" ] && echo "'drive $drv' does not exist!" && exit 2
+
+    cd "$drv":;		# change to the target drive
+
+    # check all directories in the drive
+    for i in *; do
+
+      # skip $RECYCLE.BIN
+      name=${i/\$RE/}; [ "$i" != "$name" ] && continue;
+
+      # skip 'System Volume Information'
+      name=${i/System /}; [ "$i" != "$name" ] && continue;
+
+      [ "$debug" -ne 0 ] && echo "$i";
+
+      [ ! -d "$i" ] && continue;
+
+      # check whether it is one or more subdirectories
+      nsubdir=`find "$i" -maxdepth 1 -type d | wc -l`;
+
+      [ "$nsubdir" -ne 1 ] && echo "$i: $nsubdir subdirectories"
+
     done
 
-  # what is it?
-  else
-    echo ""
-    echo "$1: not a directory!"
   fi
 
   shift
 
 done
+
+cd "$curdir";
+
+exit 0
