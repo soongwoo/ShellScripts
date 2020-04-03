@@ -27,15 +27,15 @@ len=0;	# length of previous output
 
 for i in *; do
 
-  # skip $RECYCLE.BIN
-  name=${i/^\$RE/}; [ "$i" != "$name" ] && continue;
-
-  # skip 'System Volume Information'
-  name=${i/^System /}; [ "$i" != "$name" ] && continue;
-
   printf "%*s\r" "$len" " ";	# erase previous output with blanks
   echo -en "$i\r";		# print current file name
   len=${#i};			# length of current output
+
+  # skip $RECYCLE.BIN
+  name=${i/\$RECYCLE.BIN/}; [ "$i" != "$name" ] && continue;
+
+  # skip 'System Volume Information'
+  name=${i/System Volume Information/}; [ "$i" != "$name" ] && continue;
 
   # convert blanks to a dot
   name=$(echo "$i" | sed 's/  */\./g');
