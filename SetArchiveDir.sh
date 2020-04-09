@@ -43,12 +43,12 @@ cat "$md5" | while read line; do
 
   # extract dir name
   newdir=${arg%\/*};
-  [ "$debug" -eq 2 ] && echo "$newdir"
 
   # rename the dir only if it is a new dir
   if [ "$olddir" != "$newdir" ]; then
     olddir="$newdir";
-    echo "$tag"."$newdir";
+    [ "$debug" -eq 2 ] && echo "$newdir"
+    [ "$debug" -eq 0 ] && echo "$tag"."$newdir";
     [ "$debug" -eq 0 ] && mv "$newdir" "$tag"."$newdir"
   fi
 

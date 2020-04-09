@@ -13,14 +13,15 @@ while (( "$#" )); do
 
   # option argument
   if [ ${1:0:1} = '-' ]; then
-    tmp=${1:1}              # strip off leading '-'
-    parameter=${tmp%%=*}    # extract name
-    value=${tmp##*=}        # extract value
+    tmp=${1:1}			# strip off leading '-'
+    parameter=${tmp%%=*}	# extract name
+    value=${tmp##*=}		# extract value
     eval $parameter=$value
 
   elif [ -d "$1" ]; then
 
     dname="$1";
+    dname=${1%/}	# remove trailing slash char
 
     # skip $RECYCLE.BIN
     i=${dname/\$RECYCLE.BIN/}; [ "$dname" != "$i" ] && continue;
