@@ -8,6 +8,13 @@ USAGE="Usage: $0 $OPTION"
 
 debug=0
 
+# get current drive
+curdir=$(pwd);		[ "$debug" -ne 0 ] && echo "$curdir";
+curdrv=${curdir:10:1};	[ "$debug" -ne 0 ] && echo "$curdrv";
+
+# move to the root of current drive
+cd "$curdrv":;		[ "$?" -ne 0 ] && echo "Error: move to the root" && exit 1;
+
 # compare files and directories
 while (( "$#" )); do
 

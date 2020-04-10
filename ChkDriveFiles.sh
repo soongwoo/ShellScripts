@@ -3,7 +3,7 @@
 # Check whether all files in the source drive directories in the target drive.
 #
 
-OPTION="[-debug=0] [tag=A]"
+OPTION="[-debug=0] [-tag=A]"
 USAGE="Usage: $0 $OPTION target-drive-letter"
 
 tag=A
