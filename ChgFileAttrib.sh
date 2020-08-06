@@ -6,7 +6,7 @@
 # NEED TO UNDERSTAND FILE ATTRIBUTE IN WINDOWS 10
 #
 
-OPTION="[-debug=0] [-dattr=770] [-fattr=700]"
+OPTION="[-debug=0] [-dattr=770] [-fattr=770]"
 USAGE="Usage: $0 $OPTION"
 
 debug=0
