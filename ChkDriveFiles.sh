@@ -50,14 +50,16 @@ for i in *; do
     result=0;
 
     # compare all files in the directory
-    for fname in "$i"/*; do
+    find "$i"/* -type f | while read fname; do
 
-      f=${fname##$i*\/};
+      h=${fname%% *};		# remove after 1st blank
+      f=${fname#$h*/};	# take off the directory name
 
       echo -n " $f";
       lval=$(diff "$i"/"$f" /cygdrive/"$drv"/"$i"/"$f");
 
-      [ "$?" -ne 0 ] && result=1 && echo ": NOT COPIED" && break;
+      # can not set 'result' as 1!
+      [ "$?" -ne 0 ] && result=1 && echo ": NOT COPIED" && exit 1;
 
       echo "";
 
