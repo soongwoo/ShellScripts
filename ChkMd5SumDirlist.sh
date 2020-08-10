@@ -22,19 +22,21 @@ while (( "$#" )); do
   # directory name
   elif [ -d "$1" ]; then
 
-    if [ -z "$(ls -A $1/*.md5)" ]; then
-      echo -e "\n$1: no md5 file!"
+    dname=${1%/}		# remove trailing slash char
+
+    if [ ! -e "$dname"/"$dname".md5 ]; then
+      echo -e "\n'$dname': no md5 file!"
     else
-      echo -e "\n$1: Check its integrity with md5sum ..."
+      echo -e "\n'$dname': Check its integrity with md5sum ..."
 
       cd "$1"
-      md5sum -c *.md5  # specify md5 filename
+      md5sum -c "$dname".md5	# specify md5 filename
       cd "$curdir"
     fi
 
   # what is it?
   else
-    echo -e "\n$1: not a directory!"
+    echo -e "\n'$1': not a directory!"
   fi
 
   shift
