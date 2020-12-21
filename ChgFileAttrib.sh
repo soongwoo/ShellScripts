@@ -11,7 +11,7 @@ USAGE="Usage: $0 $OPTION"
 
 debug=0
 dattr=770
-fattr=700
+fattr=770
 
 # compare files and directories
 while (( "$#" )); do
@@ -48,17 +48,18 @@ for i in *; do
     [ "$debug" -ne 0 ] && (( ndir++ ));		# increment directory counter
 
     chmod "$dattr" "$i";	# change directory attribute
+    chmod -R "$fattr" "$i"/*	# change file attribute under the directory
 
     # check whether it is one or more subdirectories
-    nsubdir=`find "$i" -maxdepth 1 -type d | wc -l`;
+    # nsubdir=`find "$i" -maxdepth 1 -type d | wc -l`;
 
-    if [ "$nsubdir" -ne 1 ]; then
-      echo "$i: check subdirectories"
+    # if [ "$nsubdir" -ne 1 ]; then
+    #   echo "$i: check subdirectories"
 
-    else # no subdirectories
-      echo "$i";
-      chmod "$fattr" "$i"/*
-    fi
+    # else # no subdirectories
+    #   echo "$i";
+    #   chmod "$fattr" "$i"/*
+    # fi
 
   else 
 
