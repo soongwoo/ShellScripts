@@ -49,9 +49,10 @@ for i in *; do
       [ ! -e "$f" ] && sed -i "/$f/d" "$i".md5 && echo " REMOVE:$f" && continue;
 
       # replace with new md5 value
+      echo " $f";
       result=$(md5sum "$f");
       newmd5=$(echo "$result" | head -n1 | cut -d " " -f1);
-      [ "$oldmd5" != "$newmd5" ] && echo "$result" && sed -i "s/$oldmd5/$newmd5/g" "$i".md5;
+      [ "$oldmd5" != "$newmd5" ] && sed -i "s/$oldmd5/$newmd5/g" "$i".md5;
     done
 
     cd ..;

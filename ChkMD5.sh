@@ -46,9 +46,8 @@ if [ "$#" -eq 0 ]; then
     name=${i/System /}; [ "$i" != "$name" ] && continue;
 
     # check the "$i" directory md5
-    echo "check '$i' md5:"
+    echo -e "\ncheck '$i' md5:"
     create_dirmd5 "$i";
-    echo "";
 
   done
 
@@ -62,9 +61,8 @@ else
     i=${1%/*};
 
     # check the "$i" directory md5
-    echo "check '$i' md5:"
+    echo -e "\ncheck '$i' md5:"
     create_dirmd5 "$i";
-    echo "";
 
     shift
 
