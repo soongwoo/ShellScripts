@@ -5,9 +5,10 @@
 # - group:None
 #
 
-OPTION="[-owner=Home] [-group=None]"
+OPTION="[-debug=0] [-owner=Home] [-group=None]"
 USAGE="Usage: $0 $OPTION"
 
+debug=0
 owner=Home
 group=None
 
@@ -26,11 +27,12 @@ while (( "$#" )); do
 
 done
 
-echo "owner=$owner group=$group"
+[ "$debug" -ne 0 ] && echo "owner=$owner group=$group"
 
 # main function
 ndir=0
 nfile=0
+
 for i in *; do
 
   # skip $RECYCLE.BIN
@@ -41,14 +43,15 @@ for i in *; do
 
   echo "$i";	# show the progress
 
-  chown "$owner":"$group" "$i";	# change directory attribute
+  chown -R "$owner":"$group" "$i";	# change directory attribute
   if [ -d "$i" ]; then
     (( ndir++ ));			# increment directory counter
-    chown -R "$owner":"$group" "$i"/*;	# change files attribute in the directory
   else
     (( nfile++ ));			# increment directory counter
   fi
 
 done
+
+[ "$debug" -ne 0 ] && echo "ndir=$ndir nfile=$nfile"
 
 exit 0

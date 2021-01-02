@@ -6,12 +6,12 @@
 # NEED TO UNDERSTAND FILE ATTRIBUTE IN WINDOWS 10
 #
 
-OPTION="[-debug=0] [-dattr=770] [-fattr=770]"
+OPTION="[-debug=0] [-dattr=755] [-fattr=644]"
 USAGE="Usage: $0 $OPTION"
 
 debug=0
-dattr=770
-fattr=770
+dattr=755
+fattr=644
 
 # compare files and directories
 while (( "$#" )); do
@@ -35,6 +35,7 @@ done
 # main function
 ndir=0
 nfile=0
+
 for i in *; do
 
   # skip $RECYCLE.BIN
@@ -43,32 +44,35 @@ for i in *; do
   # skip 'System Volume Information'
   name=${i/System /}; [ "$i" != "$name" ] && continue;
 
+  echo "$i";	# show the progress
+
   if [ -d "$i" ]; then
 
     [ "$debug" -ne 0 ] && (( ndir++ ));		# increment directory counter
 
     chmod "$dattr" "$i";	# change directory attribute
-    chmod -R "$fattr" "$i"/*	# change file attribute under the directory
 
-    # check whether it is one or more subdirectories
-    # nsubdir=`find "$i" -maxdepth 1 -type d | wc -l`;
-
-    # if [ "$nsubdir" -ne 1 ]; then
-    #   echo "$i: check subdirectories"
-
-    # else # no subdirectories
-    #   echo "$i";
-    #   chmod "$fattr" "$i"/*
-    # fi
+    cd "$i";
+    find * | while read f; do
+      if [ -d "$f" ]; then
+        chmod "$dattr" "$f"
+        [ "$debug" -ne 0 ] && echo " $i/$f";
+      else
+        chmod "$fattr" "$f"
+        [ "$debug" -ne 0 ] && echo " $f";
+      fi
+    done
+    cd ..;
 
   else 
 
-    [ "$debug" -ne 0 ] && (( nfile++ ));
-
     chmod "$fattr" "$i"
+    [ "$debug" -ne 0 ] && (( nfile++ ));
 
   fi
 
 done
+
+[ "$debug" -ne 0 ] && echo "ndir=$ndir nfile=$nfile"
 
 exit 0
