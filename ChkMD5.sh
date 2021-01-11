@@ -12,8 +12,6 @@ create_dirmd5()
 {
   dname=$1;		# 1st argument = directory name
 
-  cd "$dname";
-
   # ready to process $md5
   md5="$dname".md5;
   [ ! -e "$md5" ] && echo " '$md5'" && touch "$md5" && chmod 644 "$md5";
@@ -28,46 +26,53 @@ create_dirmd5()
     [ "$?" -ne 0 ] && echo " '$f'" && md5sum "$f" >> "$md5";
 
   done
-
-  cd ..;
 }
 
-if [ "$#" -eq 0 ]; then
+# process the given arguments
+while (( "$#" )); do
 
-  for i in *; do
+  i="$1";	# set a variable
 
-    # skip if it is not a directory
-    [ ! -d "$i" ] && continue;
+  # option argument
+  if [ ${i:0:1} = '-' ]; then
 
-    # skip $RECYCLE.BIN
-    name=${i/\$RE/}; [ "$i" != "$name" ] && continue;
+    tmp=${i:1}              # strip off leading '-'
+    parameter=${tmp%%=*}    # extract name
+    value=${tmp##*=}        # extract value
+    eval $parameter=$value
 
-    # skip 'System Volume Information'
-    name=${i/System /}; [ "$i" != "$name" ] && continue;
+  # it's a directory
+  elif [ -d "$i" ]; then
 
-    # check the "$i" directory md5
-    echo -e "\ncheck '$i' md5:"
-    create_dirmd5 "$i";
+    name=${i/\$RE/};
 
-  done
+    # not '$RECYCLE.BIN'
+    if [ "$i" == "$name" ]; then
 
-else
+      name=${i/System /};
 
-  while (( "$#" )); do
+      # not 'System Volume Information'
+      if [ "$i" == "$name" ]; then
 
-    # skip if it is not a directory
-    [ ! -d "$1" ] && continue;
+        i=${1%/*};
 
-    i=${1%/*};
+        # check the "$i" directory md5
+        echo -e "\nCheck '$i' md5:"
+	cd "$i";
+        create_dirmd5 "$i";
+	cd ..;
 
-    # check the "$i" directory md5
-    echo -e "\ncheck '$i' md5:"
-    create_dirmd5 "$i";
+      fi # not 'System Volume Information'
 
-    shift
+    fi # not $RECYCLE.BIN
 
-  done
+  # it's a file
+  else
+    echo "\n'$i': not a directory";
+  fi
 
-fi
+  shift
+
+done
 
 exit 0
