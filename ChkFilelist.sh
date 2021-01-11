@@ -5,7 +5,7 @@
 OPTION="[-debug=0]"
 USAGE="Usage: $0 dir1 dir2 ... dirN"
 
-[ $# -lt 1 ] && echo "$USAGE" && exit 1
+[ "$#" -lt 1 ] && echo "$USAGE" && exit 1
 
 curdir=$(pwd)
 

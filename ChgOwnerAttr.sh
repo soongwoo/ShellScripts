@@ -21,6 +21,8 @@ while (( "$#" )); do
     parameter=${tmp%%=*}    # extract name
     value=${tmp##*=}        # extract value
     eval $parameter=$value
+  else
+    echo "$USAGE" && exit 1
   fi
 
   shift
