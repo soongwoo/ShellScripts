@@ -1,12 +1,12 @@
 #!/bin/bash
 #
-# Convert to UTF-8.
+# Convert to UTF-8 if it's a '.txt' file.
 # - '^\xEF\xBB\xBF': UTF-8 with BOM
 # - '^\xFE\xFF': UTF-16 BE
 # - '^\xFF\xFE': UTF-16 LE
 #
 
-OPTION="[-debug=0] (dir_i|file_i)*"
+OPTION="[-debug=0] (dir_i|file_i)+"
 USAGE="Usage: $0 $OPTION"
 
 # check # of arguments
