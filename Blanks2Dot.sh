@@ -1,14 +1,15 @@
 #!/bin/bash
 #
-# Convert blanks to a single dot in file name or direcroty name.
+# Convert blanks to a single dot in file name or directory name.
 #
 
-OPTION="[-debug=0] (dir_i|file_i)+"
-USAGE="Usage: $0 $OPTION "
+OPTION="[-debug=0]"
+USAGE="Usage: $0 $OPTION (dir_i|file_i)"
 
 # check # of arguments
 [ "$#" -lt 1 ] && echo "$USAGE" && exit 1;
 
+#initialize variables
 debug=0
 
 # main function
@@ -33,7 +34,7 @@ while (( "$#" )); do
     [ "$debug" -ne 0 ] && echo "argument='$i'";
 
     # strip off '/' from at the end of string
-    lc=${i: -1 }; [ "$lc" == '/' ] && i=${i::-1};
+    lc=${i: -1}; [ "$lc" == '/' ] && i=${i::-1};
 
     # extract the name only
     f=${i##*/};

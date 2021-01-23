@@ -6,8 +6,8 @@
 # - '^\xFF\xFE': UTF-16 LE
 #
 
-OPTION="[-debug=0] (dir_i|file_i)+"
-USAGE="Usage: $0 $OPTION"
+OPTIONS="[-debug=0]"
+USAGE="Usage: $0 $OPTIONS (dir_i|file_i)"
 
 # check # of arguments
 [ "$#" -eq 0 ] && echo "$USAGE" && exit 1;

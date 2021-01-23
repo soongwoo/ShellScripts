@@ -1,26 +1,54 @@
 #!/bin/bash
 #
-# Check whether video file's description file exists in current drive,
+# List directory which doesn't have a description file,
 #
 
-USAGE="Usage: $0"
+OPTIONS="[-debug=0]"
+USAGE="Usage: $0 $OPTIONS (dir_i)"
 
-[ $# -gt 1 ] && echo "$USAGE" && exit 1
+[ $# -lt 1 ] && echo "$USAGE" && exit 1
 
-for i in *; do
+# initialize variables
+debug=0;
 
-  # skip if it is not a directory
-  [ ! -d "$i" ] && continue;
+# process the arguments
+while (( "$#" )); do
 
-  # skip $RECYCLE.BIN
-  name=${i/\$RE/}; [ "$i" != "$name" ] && continue;
+  i="$1";		# make it more readable
 
-  # skip 'System Volume Information'
-  name=${i/System /}; [ "$i" != "$name" ] && continue;
+  # option argument
+  if [ ${i:0:1} = '-' ]; then
+    tmp=${i:1};			# strip off leading '-'
+    parameter=${tmp%%=*};	# extract name
+    value=${tmp##*=};		# extract value
+    eval $parameter=$value;
 
-  # check video file's descrition text
-  [ ! -e "$i"/"$i".txt ] && echo "$i";
+  # if it doesn't exist
+  elif [ ! -e "$i" ]; then
+    echo "Unknown file or directory: '$i'";
 
-done
+  # it's a file
+  elif [ ! -d "$i" ]; then
+    echo "Not a directory: '$i'";
 
-exit 0
+  # it's a directory
+  else
+
+    # strip off '/' from at the end of string
+    lc=${i: -1}; [ "$lc" == '/' ] && i=${i::-1};
+
+    # neither '$RECYCLE.BIN' nor 'System Volume Information'
+    if [ "$i" != "\$RECYCLE.BIN" -a "$i" != "System Volume Information" ]; then
+
+      # check video file's descrition text
+      [ ! -e "$i"/"$i".txt ] && echo "$i";
+
+    fi;	# neither '$RECYCLE.BIN' nor 'System Volume Information'
+
+  fi;
+
+  shift;
+
+done;
+
+exit 0;

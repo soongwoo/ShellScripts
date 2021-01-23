@@ -26,13 +26,13 @@
 # echo $i
 #
 
-OPTION="[-debug=0] [-tag=A] destination-drive source_(dir_i|file_i)+"
+OPTION="[-debug=0] [-tag=A] destination-drive source_(dir_i|file_i)"
 USAGE="Usage: $0 $OPTION "
 
 # check # of arguments
 [ "$#" -lt 2 ] && echo "$USAGE" && exit 1;
 
-# variables
+# initialize variables
 debug=0;
 dst="";
 tag="A";
@@ -65,31 +65,22 @@ while (( "$#" )); do
   elif [ ! -e "$dst"/"$i" ]; then
     echo "'$i': NOT COPIED";
 
-  # it's an argument
+  # it's a file
+  elif [ -f "$i" ]; then
+    diff "$i" "$dst"/"$i" &> /dev/null;
+    if [ "$?" -eq 0 ]; then echo "$i: Copied"; else echo -e "$i: NOT COPIED"; fi;
+
+  # it's a directory
   else
 
     # strip off '/' from at the end of string
-    lc=${i: -1 }; [ "$lc" == '/' ] && i=${i::-1};
+    lc=${i: -1}; [ "$lc" == '/' ] && i=${i::-1};
 
     # neither '$RECYCLE.BIN' nor 'System Volume Information'
     if [ "$i" != "\$RECYCLE.BIN" -a "$i" != "System Volume Information" ]; then
 
-      echo""; result=1;		# set the result
-
-      # it's a file
-      if [ -f "$i" ]; then
-
-        echo -n "$i: ";	# show the progress
-        rtn=$(diff "$i" "$dst"/"$i" &> /dev/null);
-	if [ "$?" -eq 0 ]; then echo "Copied"; else echo "NOT COPIED"; result=0; fi;
-
-      # it's a directory
-      else
-
-        echo "$i:";	# show the progrss
-
-        wd=$(pwd);	# save the retun point
-
+#         wd=$(pwd);	# save the retun point
+#
 # Use '.md5' in source directory
 #         ii=$(readlink -f "$i");		# get full path name of $i
 #         cd "$dst"/"$i";
@@ -97,53 +88,50 @@ while (( "$#" )); do
 #         [ "$?" -ne 0 ] && result=0;
 #         cd "$wd";
 
-        # scan all files but .md5
-	OIFS="$IFS"; IFS=$'\n';		# handle spaces in file name
-        for f in $(find "$i"/* -type f); do
+      result=0;		# set the result
+      echo -e "\n$i: ";	# show the progress
 
-          ff=${f##$i/};		# do not print '$i/'
+      # scan all files but .md5
+      IFS="$IFS"; IFS=$'\n';		# handle spaces in file name
+      for f in $(find "$i"/* -type f); do
 
-          echo -n " $ff: ";	# show the progress
+        ff=${f##$i/};		# do not print '$i/'
 
-	  # it's a '.md5' file
-	  if [ ${ff/.md5/} != "$ff" ]; then
+        echo -n " $ff: ";	# show the progress
 
-            if [ -f "$dst"/"$f" ]; then
-              diff "$f" "$dst"/"$f" &> /dev/null;
-              [ "$?" -ne 0 ] && cat "$f" >> "$dst"/"$f";
+        diff "$f" "$dst"/"$f" &> /dev/null;
+        if [ "$?" -eq 0 ]; then rtn=0; else rtn=1; fi;
 
-              # remove duplicate lines and sort
-              tmpfile=$(mktemp /tmp/script.XXXXXX);
-	      sort -k 2 -u "$dst"/"$f" > "$tmpfile";
-	      cp "$tmpfile" "$dst"/"$f";
-              rm "$tmpfile";
+        # it's a '.md5' file,
+        if [ "$rtn" -ne 0 -a ${ff/.md5/} != "$ff" ]; then
 
-              rtn=0;
+          rtn=0;	# yes, it's copied.
 
-            else
-              rtn=1;
-            fi;
-
-          else
+          if [ -f "$dst"/"$f" ]; then
             diff "$f" "$dst"/"$f" &> /dev/null;
-            if [ "$?" -eq 0 ]; then rtn=0; else rtn=1; fi;
+            [ "$?" -ne 0 ] && cat "$f" >> "$dst"/"$f";
+
+            # remove duplicate lines and sort
+            tmpfile=$(mktemp /tmp/script.XXXXXX);
+            sort -k 2 -u "$dst"/"$f" > "$tmpfile";
+            mv "$tmpfile" "$dst"/"$f";
           fi;
 
-          if [ "$rtn" -eq 0 ]; then echo ""; else echo "NOT COPIED"; result=0; fi;
+        fi;
 
-        done
+        if [ "$rtn" -eq 0 ]; then echo ""; else echo "NOT COPIED"; result=1; fi;
 
-      fi
+      done;
 
       # if the source is copied
-      [ "$result" -ne 0 ] && mv "$i" "$tag"."$i";
+      [ "$result" -eq 0 ] && mv "$i" "$tag"."$i";
 
-    fi # neither '$RECYCLE.BIN' nor 'System Volume Information'
+    fi;	# neither '$RECYCLE.BIN' nor 'System Volume Information'
 
-  fi
+  fi;
 
-  shift
+  shift;
 
-done
+done;
 
-exit 0
+exit 0;
