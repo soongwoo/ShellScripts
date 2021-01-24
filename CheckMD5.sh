@@ -47,7 +47,7 @@ while (( "$#" )); do
 
         cd "$i";
         md5sum -c "$i".md5;	# specify md5 filename
-        cd "$curdir";
+        cd "$wd";
       fi;
 
     fi;	# neither '$RECYCLE.BIN' nor 'System Volume Information'
