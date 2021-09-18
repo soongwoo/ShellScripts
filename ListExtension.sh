@@ -34,7 +34,7 @@ function add_extension ()
 
   # add it in $extstr
   [ "$debug" -gt 0 ] && echo -e " $1\t$2";
-  extstr+=("$1");
+  extstr+=("$ext");
   extfrq+=(1)
 }
 
