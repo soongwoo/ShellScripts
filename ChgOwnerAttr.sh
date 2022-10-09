@@ -30,18 +30,18 @@ while (( "$#" )); do
 
   # if it doesn't exist
   elif [ ! -e "$i" ]; then
-    echo "Unknown file or directory: '$i'";
+    echo -e "\n'$i': Does not exist";
 
   # it's an argument
   else
 
-    echo "$i";		# show the progress
-
     # strip off '/' from at the end of string
-    lc=${i: -1 }; [ "$lc" == '/' ] && i=${i::-1};
+    [ "${i: -1}" == '/' ] && i=${i:: -1};
 
     # neither '$RECYCLE.BIN' nor 'System Volume Information'
     if [ "$i" != "\$RECYCLE.BIN" -a "$i" != "System Volume Information" ]; then
+
+      echo "$i";		# show the progress
 
       chown -R "$owner":"$group" "$i";	# change directory attribute
 

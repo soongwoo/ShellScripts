@@ -26,7 +26,7 @@
 # echo $i
 #
 
-OPTION="[-debug=0] [-tag=A] destination-drive source_(dir_i|file_i)"
+OPTION="[-debug=0] [-tag=z] destination-drive source_(dir_i|file_i)"
 USAGE="Usage: $0 $OPTION "
 
 # check # of arguments
@@ -35,7 +35,7 @@ USAGE="Usage: $0 $OPTION "
 # initialize variables
 debug=0;
 dst="";
-tag="A";
+tag="z";
 
 # process the arguments
 while (( "$#" )); do
@@ -59,72 +59,66 @@ while (( "$#" )); do
 
   # if it doesn't exist
   elif [ ! -e "$i" ]; then
-    echo "Source: Unknown file or directory '$i'";
-
-  # if it doesn't exist
-  elif [ ! -e "$dst"/"$i" ]; then
-    echo "'$i': NOT COPIED";
+    echo -e "\n'$i': Does not exist";
 
   # it's a file
   elif [ -f "$i" ]; then
-    diff "$i" "$dst"/"$i" &> /dev/null;
-    if [ "$?" -eq 0 ]; then echo "$i: Copied"; else echo -e "$i: NOT COPIED"; fi;
+    echo -en "\n$i: ";
+    [ "$(diff "$i" "$dst"/"$i" &> /dev/null)" ] && echo "NOT COPIED" || echo "";
 
   # it's a directory
-  else
+  elif [ -d "$dst"/"$i" ]; then
 
     # strip off '/' from at the end of string
-    lc=${i: -1}; [ "$lc" == '/' ] && i=${i::-1};
+    [ "${i: -1}" == '/' ] && i=${i:: -1};
 
     # neither '$RECYCLE.BIN' nor 'System Volume Information'
     if [ "$i" != "\$RECYCLE.BIN" -a "$i" != "System Volume Information" ]; then
 
-#         wd=$(pwd);	# save the retun point
-#
-# Use '.md5' in source directory
-#         ii=$(readlink -f "$i");		# get full path name of $i
-#         cd "$dst"/"$i";
-#         rtn=$(md5sum -c "$ii"/*md5 &> /dev/null);
-#         [ "$?" -ne 0 ] && result=0;
-#         cd "$wd";
-
       result=0;		# set the result
       echo -e "\n$i: ";	# show the progress
 
-      # scan all files but .md5
-      IFS="$IFS"; IFS=$'\n';		# handle spaces in file name
-      for f in $(find "$i"/* -type f); do
+      # it's not an empty directory
+      if [ "$(ls -A "$i")" ]; then 
 
-        ff=${f##$i/};		# do not print '$i/'
-
-        echo -n " $ff: ";	# show the progress
-
-        diff "$f" "$dst"/"$f" &> /dev/null;
-        if [ "$?" -eq 0 ]; then rtn=0; else rtn=1; fi;
-
-        # it's a '.md5' file,
-        if [ "$rtn" -ne 0 -a ${ff/.md5/} != "$ff" ]; then
+        # scan all files but .md5
+        IFS="$IFS"; IFS=$'\n';		# handle spaces in file name
+	for f in $(find "$i"/* -type f); do
 
           rtn=0;	# yes, it's copied.
 
-          if [ -f "$dst"/"$f" ]; then
-            diff "$f" "$dst"/"$f" &> /dev/null;
-            [ "$?" -ne 0 ] && cat "$f" >> "$dst"/"$f";
+          ff=${f##$i/};		# do not print '$i/'
 
-            # remove duplicate lines and sort
-            tmpfile=$(mktemp /tmp/script.XXXXXX);
-            sort -k 2 -u "$dst"/"$f" > "$tmpfile";
-            mv "$tmpfile" "$dst"/"$f";
-          fi;
+          echo -n " $ff: ";	# show the progress
 
-        fi;
+          # it's a '.md5' file,
+          if [ ${ff/.md5/} != "$ff" ]; then
 
-        if [ "$rtn" -eq 0 ]; then echo ""; else echo "NOT COPIED"; result=1; fi;
+            # update destination .md5 file
+            if [ -f "$dst"/"$f" ]; then
 
-      done;
+              cat "$f" >> "$dst"/"$f";
+              tmpfile=$(mktemp /tmp/script.XXXXXX);
+
+              sort -k 2 -u "$dst"/"$f" > "$tmpfile"; # remove duplicate lines and sort
+              mv "$tmpfile" "$dst"/"$f";
+
+            fi; # update destination .md5 file
+
+          # not .md5 file
+          else
+            [ "$(diff "$f" "$dst"/"$f" &> /dev/null)" ] && rtn=1;
+
+          fi; # it's a '.md5' file,
+
+          if [ "$rtn" -eq 0 ]; then echo ""; else echo "NOT COPIED"; result=1; fi;
+
+        done;
+
+      fi; # it's not an empty directory
 
       # if the source is copied
-      [ "$result" -eq 0 ] && mv "$i" "$tag"."$i";
+      [ "$result" -eq 0 ] && mv "$i" "$tag"."$i" || echo "$i: NOT COPIED";
 
     fi;	# neither '$RECYCLE.BIN' nor 'System Volume Information'
 

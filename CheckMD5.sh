@@ -24,17 +24,20 @@ while (( "$#" )); do
 
   # if it doesn't exist
   elif [ ! -e "$i" ]; then
-    echo -e "\n'$i': Unknown file or directory";
+    echo -e "\n'$i': Does not exist";
 
   # it's a file
   elif [ ! -d "$i" ]; then
     echo -e "\n'$i': Not a directory";
 
+  # not empty directory
+  elif [ "$(ls -A "$i")" ]; then
+
   # it's a directory
   else
 
     # strip off '/' from at the end of string
-    lc=${i: -1}; [ "$lc" == '/' ] && i=${i:: -1};
+    [ "${i: -1}" == '/' ] && i=${i:: -1};
 
     # neither '$RECYCLE.BIN' nor 'System Volume Information'
     if [ "$i" != "\$RECYCLE.BIN" -a "$i" != "System Volume Information" ]; then
@@ -46,7 +49,7 @@ while (( "$#" )); do
         echo -e "\n'$i': Check its integrity with md5sum ...";
 
         cd "$i";
-        md5sum -c "$i".md5;	# specify md5 filename
+        md5sum -c "$i".md5;	# check md5sum in the file
         cd "$wd";
       fi;
 

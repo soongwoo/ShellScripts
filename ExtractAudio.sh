@@ -8,13 +8,12 @@
 #  - still need to audio file format
 #
 
-OPTION="[-debug=0] [-outdir=.]"
+OPTION="[-debug=0] [-audio=aac]"
 USAGE="Usage: $0 $OPTION mediafile1 mediafile2 ... mediafileN"
 
 # initialize variables with default value
-debug=0
-outdir=""
-audio="mp3"
+debug=1
+audio="aac"
 
 # do main task
 [ $# -eq 0 ] && echo "$USAGE" && exit 1
@@ -22,51 +21,34 @@ audio="mp3"
 count=0
 while (( "$#" )); do
 
+  i="$1";	# set a variable
+
   # option argument
-  if [ ${1:0:1} = '-' ]; then
-    tmp=${1:1}              # strip off leading '-'
-    parameter=${tmp%%=*}    # extract name
-    value=${tmp##*=}        # extract value
-    eval $parameter=$value
-    shift
-    continue
-  fi
+  if [ ${i:0:1} = '-' ]; then
+    tmp=${i:1};			# strip off leading '-'
+    parameter=${tmp%%=*};	# extract name
+    value=${tmp##*=};		# extract value
+    eval $parameter=$value;
 
-  echo "Convert '$1' ..."
-  filename=${1##*/}         # extract filename
-  srcdir=${1/$filename/}    # source directory
-  fname=${filename%\.*}     # remove extension
-  ext=${filename/$fname/}   # get extension
+  # check whether it exists
+  elif [ ! -e "$i" ]; then
+    echo "'$i' does not exist!";
 
-  # set srcdir if the source are in current directory
-  [ -z "$srcdir" ] && srcdir="."
+  # check whether it's file type
+  elif [ ! -f "$i" ]; then
+    echo "'$i' is not a file!";
 
-  # take off '/', if it is a last character.
-  lastch=$(echo -n "$srcdir" | tail -c -1)
-  [ "$lastch" == "/" ] && srcdir=${srcdir/%\//}
+  # it's a media file
+  else
+    echo "Extract audio from '$1' ..."
 
-  if [ "$debug" -ne 0 ]; then
-    echo "  srcdir='$srcdir'"
-    echo "  filename='$filename'"
-    echo "  fname='$fname'"
-    echo "  ext='$ext'"
-    echo
-  fi
+    # extract audio with ffmpeg
+    ffmpeg -i "$i" -vn -acodec copy "${i%.*}"."$audio";
 
-  # if output directory is not specified, then use source directory as output directory.
-  [ -z "$outdir" ] && outdir="$srcdir"
-  [ "$debug" -ne 0 ] && echo " output file: $outdir/$fname.$audio"
-
-  # command: need preset for iPhone4
-  # ffmpeg -i "$1" -vn -c:a libfdk_aac -b:a 128k "$outdir"/"$fname"."$audio"
-
-  # when its audio is mp3 format, then just copy its audio
-  ffmpeg -i "$i" -vn -acodec copy ${i%%HD*}mp3
-
-  # ffmpeg -i "$1" -vn -c:a mp3 -b:a 320k "$outdir"/"$fname"."$audio"
+  fi;
 
   shift;
 
-done
+done;
 
-exit 0
+exit 0;
