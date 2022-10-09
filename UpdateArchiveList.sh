@@ -24,7 +24,7 @@ while (( "$#" )); do
 done
 
 homedir="/cygdrive/c/cygwin64/home/Home"	# archive home directory
-drives=(m n p q s z)	# drives
+drives=(e m p q x z)	# drives
 curdir=$(pwd);		# current position
 
 for drv in ${drives[@]}; do
